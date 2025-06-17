@@ -67,6 +67,15 @@ namespace Installer
             }
 
             string startupPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), "ALVRAutoStart.lnk");
+            if (File.Exists(startupPath))
+            {
+                File.Delete(startupPath);
+            }
+            var shell = new IWshRuntimeLibrary.WshShell();
+            var shortcut = shell.CreateShortcut(startupPath) as IWshRuntimeLibrary.IWshShortcut;
+            shortcut.TargetPath = programPath;
+            shortcut.WorkingDirectory = programFilesPath;
+            shortcut.Save();
 
             System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
